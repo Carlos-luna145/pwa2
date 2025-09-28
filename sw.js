@@ -1,4 +1,4 @@
-var cacheName = 'pwa2-v1';
+var cacheName = 'pwa2-v2';
 
 var filesToCache = [
   '/pwa2/',
@@ -13,41 +13,18 @@ var filesToCache = [
   '/pwa2/iconos/homescreen192.png'
 ];
 
-// Instalación
 self.addEventListener('install', event => {
   console.log('Service Worker: Instalando...');
   event.waitUntil(
     caches.open(cacheName)
       .then(cache => {
-        console.log('Service Worker: Archivos cacheados');
-        return cache.addAll(filesToCache);
-      })
-  );
-});
-
-// Activación
-self.addEventListener('activate', event => {
-  console.log('Service Worker: Activado');
-  event.waitUntil(
-    caches.keys().then(keys => {
-      return Promise.all(
-        keys.map(key => {
-          if (key !== cacheName) {
-            console.log('Service Worker: Caché antiguo eliminado:', key);
-            return caches.delete(key);
-          }
-        })
-      );
-    })
-  );
-});
-
-// Interceptar peticiones
-self.addEventListener('fetch', event => {
-  event.respondWith(
-    caches.match(event.request)
-      .then(response => {
-        return response || fetch(event.request);
+        return Promise.all(
+          filesToCache.map(url => {
+            return cache.add(url).catch(err => {
+              console.warn('⚠️ No se pudo cachear', url, err);
+            });
+          })
+        );
       })
   );
 });
