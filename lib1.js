@@ -1,6 +1,4 @@
-<div id="contenido"></div>
 
-<script>
 const params = new URLSearchParams(window.location.search);
 const n = parseInt(params.get('n'));
 const d = parseInt(params.get('d'));
@@ -33,3 +31,4 @@ let q = new Quickchart(n, d);
 document.getElementById("contenido").innerHTML =
   '<img src="' + q.generarSrcImg() + '" />';
 </script>
+
