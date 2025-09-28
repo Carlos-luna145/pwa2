@@ -1,7 +1,7 @@
-// Obtener parámetros de URL
+// Obtener parámetros de URL con valores por defecto
 const params = new URLSearchParams(window.location.search);
-const n = parseInt(params.get('n')); // número de porciones resaltadas
-const d = parseInt(params.get('d')); // total de porciones
+const n = parseInt(params.get('n')) || 1; // por defecto 1
+const d = parseInt(params.get('d')) || 4; // por defecto 4
 
 class Quickchart {
     constructor(n, d) {
@@ -9,21 +9,18 @@ class Quickchart {
         this.d = d;
     }
 
-    // Crear datos para Quickchart
     crearCadunos() {
-        // La idea: n porciones resaltadas y d-n normales
-        let cad = Array(this.n).fill(1); // porciones resaltadas
-        cad = cad.concat(Array(this.d - this.n).fill(0)); // resto
-        return cad.join(',');
+        let cad = "";
+        for (let i = 0; i < this.d; i++) {
+            cad += "1,";
+        }
+        return cad.slice(0, -1); // quitar la última coma
     }
 
     generarSrcImg() {
-        // Usamos "chco" para dar color a las porciones: rojo para resaltadas, gris para las demás
-        let colors = Array(this.n).fill("ff0000").concat(Array(this.d - this.n).fill("cccccc")).join('|');
-
-        let url = "https://quickchart.io/chart?cht=p&chd=t:" + this.crearCadunos() +
-                  "&chs=500x250&chl=" + this.n + "/" + this.d +
-                  "&chco=" + colors;
+        // Solo mostramos la fracción n/d en las etiquetas
+        let url = "https://quickchart.io/chart?cht=p3&chd=t:" + this.crearCadunos()
+            + "&chs=500x250&chl=" + this.n + "/" + this.d;
         return url;
     }
 }
