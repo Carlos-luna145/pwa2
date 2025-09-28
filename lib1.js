@@ -7,14 +7,15 @@ class Quickchart {
     this.d = d;
   }
 
-  crearCadunos() {
-    let cadunos = "";
-    for (let i = 1; i < this.d; i++) {
-      cadunos += "1,";
-    }
-    cadunos += "1"; // agrega el último sin coma
-    return cadunos;
+crearCadunos() {
+  let cadunos = "";
+  for (let i = 0; i < this.d; i++) {
+    cadunos += "1,";
   }
+  cadunos = cadunos.slice(0, -1); // quita la última coma
+  return cadunos;
+}
+
 
   generarSrcImg() {
     let url = "https://quickchart.io/chart?cht=p3&chd=t:" 
@@ -28,3 +29,4 @@ class Quickchart {
 let q = new Quickchart(d);
 document.getElementById("contenido").innerHTML = 
   '<img src="' + q.generarSrcImg() + '" />';
+
