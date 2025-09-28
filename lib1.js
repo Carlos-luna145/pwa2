@@ -10,17 +10,28 @@ class Quickchart {
     }
 
     crearValores() {
-        // Todas las rebanadas iguales
+        // Todas las rebanadas tienen valor 1
         return Array(this.d).fill(1).join(',');
     }
 
+    crearEtiquetas() {
+        // Las primeras n rebanadas muestran n/d, el resto vacías
+        let etiquetas = [];
+        for (let i = 0; i < this.d; i++) {
+            if (i < this.n) {
+                etiquetas.push(`${this.n}/${this.d}`);
+            } else {
+                etiquetas.push(''); // rebanadas sin etiqueta
+            }
+        }
+        return etiquetas.join('|');
+    }
+
     generarSrcImg() {
-        // Mostrar la fracción n/d como título
         let url = "https://quickchart.io/chart?cht=p3"
             + "&chd=t:" + this.crearValores()
             + "&chs=500x250"
-            + "&chl=" + Array(this.d).fill('').join('|')  // etiquetas vacías
-            + "&chtt=" + encodeURIComponent(`${this.n}/${this.d}`); // título con la fracción
+            + "&chl=" + this.crearEtiquetas();
         return url;
     }
 }
