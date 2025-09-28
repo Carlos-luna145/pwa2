@@ -1,22 +1,22 @@
-// lib.js (Actualizado para mostrar d rebanadas, con n resaltadas)
+// lib.js (Actualizado para mostrar d rebanadas, n resaltadas, y etiquetas en cada una)
 
 // 1. Obtener y convertir parámetros a números
 const params = new URLSearchParams(window.location.search);
-const n = parseInt(params.get('n')); // Rebanadas a resaltar (ej: 4)
-const d = parseInt(params.get('d')); // Rebanadas totales (ej: 7)
+const n = parseInt(params.get('n')); // Rebanadas a resaltar (ej: 2)
+const d = parseInt(params.get('d')); // Rebanadas totales (ej: 5)
 
 class Quickchart {
     constructor(n, d) {
         this.n = n;
         this.d = d;
-        // Definimos los colores aquí para facilitar el uso
+        // Colores personalizables
         this.colorResaltado = '0080FF'; // Un azul vibrante
         this.colorNormal = 'CCCCCC';   // Gris claro
     }
     
     // Genera la cadena de datos (d veces el número 1)
     generarCadenaDatos() {
-        // Para d=7, devuelve: "1,1,1,1,1,1,1"
+        // Para d=5, devuelve: "1,1,1,1,1"
         return new Array(this.d).fill(1).join(',');
     }
     
@@ -25,25 +25,29 @@ class Quickchart {
         const resaltadas = new Array(this.n).fill(this.colorResaltado);
         const normales = new Array(this.d - this.n).fill(this.colorNormal);
         
-        // Combina: [Color, Color, Color, Color, Gris, Gris, Gris]
+        // Combina: [Color, Color, Gris, Gris, Gris]
         return resaltadas.concat(normales).join(',');
+    }
+
+    // NUEVO: Genera la cadena de etiquetas para cada rebanada
+    generarCadenaEtiquetas() {
+        const etiqueta = `1/${this.d}`;
+        // Para d=5, devuelve: "1/5,1/5,1/5,1/5,1/5"
+        return new Array(this.d).fill(etiqueta).join(',');
     }
     
     // Genera la URL completa
     generarSrcImg() {
-        // Ejemplo para n=4, d=7:
-        // ...&chd=t:1,1,1,1,1,1,1&chco=0080FF,0080FF,0080FF,0080FF,CCCCCC,CCCCCC,CCCCCC...
         let url = "https://quickchart.io/chart?cht=p3"
-             + "&chd=t:" + this.generarCadenaDatos() // Los 7 unos
-             + "&chco=" + this.generarCadenaColores() // La secuencia de colores
+             + "&chd=t:" + this.generarCadenaDatos()      // Datos de las rebanadas
+             + "&chco=" + this.generarCadenaColores()     // Colores de las rebanadas
              + "&chs=500x250"
-             // Puedes dejar la etiqueta de título o usar una etiqueta vacía si no la quieres en el centro
-             + "&chl=" + this.n + "/" + this.d; 
+             + "&chl=" + this.generarCadenaEtiquetas();   // Etiquetas para CADA rebanada
              
         return url;
     }
 }
 
-// 3. Crear una instancia y renderizar
+// 2. Crear una instancia y renderizar
 let q = new Quickchart(n, d); 
 document.getElementById("contenido").innerHTML = '<img src="' + q.generarSrcImg() + '" />';
