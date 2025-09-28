@@ -1,6 +1,6 @@
-// http://localhost/pwasd25/index.html?n=1&d=4
+// http://localhost/pwasd25/index.html?n=2&d=5
 const params = new URLSearchParams(window.location.search);
-const n = +params.get('n');  // rebanadas destacadas
+const n = +params.get('n');  // rebanadas marcadas
 const d = +params.get('d');  // total de rebanadas
 
 class Quickchart {
@@ -8,20 +8,30 @@ class Quickchart {
         this.d = d;
         this.n = n;
     }
-    crearCadunos() {
-        let cadunos = "";
+
+    crearValores() {
+        // Todas las rebanadas tienen valor 1
+        return Array(this.d).fill(1).join(',');
+    }
+
+    crearEtiquetas() {
+        // Las primeras n rebanadas muestran n/d, el resto solo /
+        let etiquetas = [];
         for (let i = 0; i < this.d; i++) {
             if (i < this.n) {
-                cadunos += "2,"; // rebanada marcada
+                etiquetas.push(`${1}/${this.d}`);
             } else {
-                cadunos += "1,"; // rebanada normal
+                etiquetas.push(''); // o '0' si quieres que aparezca
             }
         }
-        return cadunos.slice(0, -1);
+        return etiquetas.join('|');
     }
+
     generarSrcImg() {
-        let url = "https://quickchart.io/chart?cht=p3&chd=t:" + this.crearCadunos()
-            + "&chs=500x250&chl=" + this.n + "/" + this.d;
+        let url = "https://quickchart.io/chart?cht=p3"
+            + "&chd=t:" + this.crearValores()
+            + "&chs=500x250"
+            + "&chl=" + this.crearEtiquetas();
         return url;
     }
 }
