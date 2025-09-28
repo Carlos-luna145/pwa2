@@ -1,21 +1,19 @@
-// Nombre del caché
 var cacheName = 'pwa2-v1';
 
-// Archivos a cachear (ajústalos a lo que tengas en tu proyecto)
 var filesToCache = [
-  '/',
-  '/index.html',
-  '/manifest.json',
-  '/lib1.js',
-  '/lib2.js',
-  '/hola.jpg',
-  '/unicorn.jpg',
-  '/utp.jpg',
-  '/iconos/homescreen144.png',
-  '/iconos/homescreen192.png'
+  '/pwa2/',
+  '/pwa2/index.html',
+  '/pwa2/manifest.json',
+  '/pwa2/lib1.js',
+  '/pwa2/lib2.js',
+  '/pwa2/hola.jpg',
+  '/pwa2/unicorn.jpg',
+  '/pwa2/utp.png',
+  '/pwa2/iconos/homescreen144.png',
+  '/pwa2/iconos/homescreen192.png'
 ];
 
-// Evento INSTALL → se cachean los archivos
+// Instalación
 self.addEventListener('install', event => {
   console.log('Service Worker: Instalando...');
   event.waitUntil(
@@ -27,7 +25,7 @@ self.addEventListener('install', event => {
   );
 });
 
-// Evento ACTIVATE → limpia cachés viejos
+// Activación
 self.addEventListener('activate', event => {
   console.log('Service Worker: Activado');
   event.waitUntil(
@@ -44,7 +42,7 @@ self.addEventListener('activate', event => {
   );
 });
 
-// Evento FETCH → responde desde caché si existe, si no, va a la red
+// Interceptar peticiones
 self.addEventListener('fetch', event => {
   event.respondWith(
     caches.match(event.request)
