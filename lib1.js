@@ -1,10 +1,9 @@
 // Obtener parámetros de URL
 const params = new URLSearchParams(window.location.search);
-const n = params.get('n');
-const d = params.get('d');
+const n = parseInt(params.get('n'));
+const d = parseInt(params.get('d'));
 
-// Solo crear el gráfico si ambos parámetros existen
-if (n && d) {
+if (!isNaN(n) && !isNaN(d)) {
     class Quickchart {
         constructor(n, d) {
             this.n = n;
@@ -12,18 +11,25 @@ if (n && d) {
         }
 
         crearCadunos() {
-            // Creamos d rebanadas iguales (1,1,1,...)
-            let cad = "";
+            let cad = Array(this.d).fill(1); // todas las rebanadas iguales
+            return cad.join(',');
+        }
+
+        generarEtiquetas() {
+            let etiquetas = [];
             for (let i = 0; i < this.d; i++) {
-                cad += "1,";
+                if (i < this.n) {
+                    etiquetas.push(this.n + "/" + this.d); // poner la fracción en las primeras n
+                } else {
+                    etiquetas.push(""); // las demás sin etiqueta
+                }
             }
-            return cad.slice(0, -1);
+            return etiquetas.join('|');
         }
 
         generarSrcImg() {
-            // La fracción que se muestra es n/d
             let url = "https://quickchart.io/chart?cht=p3&chd=t:" + this.crearCadunos()
-                + "&chs=500x250&chl=" + this.n + "/" + this.d;
+                + "&chs=500x250&chl=" + this.generarEtiquetas();
             return url;
         }
     }
